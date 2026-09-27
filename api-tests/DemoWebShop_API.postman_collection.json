@@ -1,0 +1,158 @@
+{
+  "info": {
+    "_postman_id": "d0c7f919-5f1c-4b5d-9b96-1a2c963dcb32",
+    "name": "SQA Project - JSONPlaceholder Users API",
+    "description": "API automation for the assignment: GET users, save a user ID, then PUT the same user using dynamic updated name/email/company.name while preserving the other original fields.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://jsonplaceholder.typicode.com" },
+    { "key": "userId", "value": "" },
+    { "key": "selectedUser", "value": "" },
+    { "key": "updatedName", "value": "" },
+    { "key": "updatedEmail", "value": "" },
+    { "key": "updatedCompanyName", "value": "" },
+    { "key": "updatedUserPayload", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1 - GET All Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["users"]
+        },
+        "description": "Gets all users, validates the response, and saves one user's ID and full object into collection variables."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const users = pm.response.json();",
+              "",
+              "pm.test('Response is a non-empty array', function () {",
+              "    pm.expect(users).to.be.an('array');",
+              "    pm.expect(users.length).to.be.above(0);",
+              "});",
+              "",
+              "pm.test('Response contains user information', function () {",
+              "    pm.expect(users[0]).to.be.an('object');",
+              "});",
+              "",
+              "pm.test('Each user has id, name, and email', function () {",
+              "    users.forEach(function (user) {",
+              "        pm.expect(user).to.have.property('id');",
+              "        pm.expect(user).to.have.property('name');",
+              "        pm.expect(user).to.have.property('email');",
+              "    });",
+              "});",
+              "",
+              "const selectedUser = users[0];",
+              "pm.collectionVariables.set('userId', selectedUser.id);",
+              "pm.collectionVariables.set('selectedUser', JSON.stringify(selectedUser));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "2 - PUT Selected User",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const selectedUserRaw = pm.collectionVariables.get('selectedUser');",
+              "if (!selectedUserRaw) {",
+              "    throw new Error('selectedUser is missing. Run the GET request first.');",
+              "}",
+              "",
+              "const user = JSON.parse(selectedUserRaw);",
+              "const stamp = Date.now();",
+              "const updatedName = `Automation User ${stamp}`;",
+              "const updatedEmail = `automation.${stamp}@example.com`;",
+              "const updatedCompanyName = `Automation Company ${stamp}`;",
+              "",
+              "user.name = updatedName;",
+              "user.email = updatedEmail;",
+              "user.company = user.company || {};",
+              "user.company.name = updatedCompanyName;",
+              "",
+              "pm.collectionVariables.set('updatedName', updatedName);",
+              "pm.collectionVariables.set('updatedEmail', updatedEmail);",
+              "pm.collectionVariables.set('updatedCompanyName', updatedCompanyName);",
+              "pm.collectionVariables.set('updatedUserPayload', JSON.stringify(user));"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const response = pm.response.json();",
+              "const savedId = Number(pm.collectionVariables.get('userId'));",
+              "const updatedName = pm.collectionVariables.get('updatedName');",
+              "const updatedEmail = pm.collectionVariables.get('updatedEmail');",
+              "const updatedCompanyName = pm.collectionVariables.get('updatedCompanyName');",
+              "",
+              "pm.test('Returned ID matches stored ID', function () {",
+              "    pm.expect(Number(response.id)).to.eql(savedId);",
+              "});",
+              "",
+              "pm.test('Phone is not empty', function () {",
+              "    pm.expect(response.phone).to.exist;",
+              "    pm.expect(String(response.phone).trim()).to.not.eql('');",
+              "});",
+              "",
+              "pm.test('Returned name matches updated name', function () {",
+              "    pm.expect(response.name).to.eql(updatedName);",
+              "});",
+              "",
+              "pm.test('Returned email matches updated email', function () {",
+              "    pm.expect(response.email).to.eql(updatedEmail);",
+              "});",
+              "",
+              "pm.test('Returned company.name matches updated company name', function () {",
+              "    pm.expect(response.company.name).to.eql(updatedCompanyName);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{updatedUserPayload}}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "{{userId}}"]
+        },
+        "description": "Uses the saved ID in /users/{id}. The pre-request script preserves the original user object and changes only name, email, and company.name with dynamic values."
+      },
+      "response": []
+    }
+  ]
+}
