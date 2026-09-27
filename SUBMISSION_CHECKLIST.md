@@ -1,0 +1,22 @@
+# Submission Checklist
+
+- [ ] Run `npm install`
+- [ ] Run `npx playwright install`
+- [ ] Confirm Java is installed for Allure
+- [ ] Run `npm run test:q1`
+- [ ] Run `npm run test:q2`
+- [ ] Run `npm run test:q3`
+- [ ] Run `npm test`
+- [ ] Open Playwright HTML report
+- [ ] Open Allure report
+- [ ] Run `npm run api:test`
+- [ ] Confirm all Newman assertions pass
+- [ ] Create a public GitHub repository
+- [ ] Push `main`
+- [ ] Push `q1-invalid-login`
+- [ ] Push `q2-register-cart`
+- [ ] Push `q3-e2e-checkout`
+- [ ] Push `api-automation`
+- [ ] Verify GitHub commit history is visible
+- [ ] Verify README is visible on GitHub
+- [ ] Submit the public repository link
