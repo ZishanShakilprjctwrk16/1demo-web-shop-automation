@@ -11,7 +11,7 @@ export class ProductPage {
     this.page = page;
     this.productTitle = page.locator('.product-name h1');
     this.quantityInput = page.locator('.qty-input');
-    this.addToCartButton = page.locator('input[value="Add to cart"]');
+    this.addToCartButton = page.locator('#product-details-form input.add-to-cart-button');
     this.notification = page.locator('#bar-notification');
   }
 

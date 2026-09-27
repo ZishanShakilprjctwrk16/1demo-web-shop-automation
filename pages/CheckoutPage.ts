@@ -20,23 +20,22 @@ export class CheckoutPage {
   async completeBillingAddress(user: TestUser) {
     const country = this.page.locator('#BillingNewAddress_CountryId');
 
-    if (await country.isVisible()) {
-      try {
-        await country.selectOption({ label: user.country });
-      } catch {
-        await this.chooseFirstUsableOption(country);
-      }
-
-      const state = this.page.locator('#BillingNewAddress_StateProvinceId');
-      if (await state.isVisible()) {
-        await this.chooseFirstUsableOption(state).catch(() => undefined);
-      }
-
-      await this.page.locator('#BillingNewAddress_City').fill(user.city);
-      await this.page.locator('#BillingNewAddress_Address1').fill(user.address1);
-      await this.page.locator('#BillingNewAddress_ZipPostalCode').fill(user.zip);
-      await this.page.locator('#BillingNewAddress_PhoneNumber').fill(user.phone);
+    await expect(country).toBeVisible();
+    try {
+      await country.selectOption({ label: user.country });
+    } catch {
+      await this.chooseFirstUsableOption(country);
     }
+
+    const state = this.page.locator('#BillingNewAddress_StateProvinceId');
+    if (await state.isVisible()) {
+      await this.chooseFirstUsableOption(state).catch(() => undefined);
+    }
+
+    await this.page.locator('#BillingNewAddress_City').fill(user.city);
+    await this.page.locator('#BillingNewAddress_Address1').fill(user.address1);
+    await this.page.locator('#BillingNewAddress_ZipPostalCode').fill(user.zip);
+    await this.page.locator('#BillingNewAddress_PhoneNumber').fill(user.phone);
 
     const continueButton = this.page.locator('#billing-buttons-container input[value="Continue"]');
     await expect(continueButton).toBeVisible();

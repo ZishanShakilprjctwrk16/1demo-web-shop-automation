@@ -5,9 +5,9 @@
   "description": "Demo Web Shop UI automation with Playwright + POM and API automation with Postman/Newman.",
   "scripts": {
     "test": "node scripts/run-tests.mjs",
-    "test:q1": "node scripts/run-tests.mjs tests/q1-invalid-login.spec.ts",
-    "test:q2": "node scripts/run-tests.mjs tests/q2-register-cart.spec.ts",
-    "test:q3": "node scripts/run-tests.mjs tests/q3-e2e-checkout.spec.ts",
+    "test:q1": "node scripts/run-tests.mjs q1-invalid-login.spec.ts",
+    "test:q2": "node scripts/run-tests.mjs q2-register-cart.spec.ts",
+    "test:q3": "node scripts/run-tests.mjs q3-e2e-checkout.spec.ts",
     "test:headed": "node scripts/run-tests.mjs --headed",
     "test:ui": "playwright test --ui",
     "report:html": "playwright show-report playwright-report",

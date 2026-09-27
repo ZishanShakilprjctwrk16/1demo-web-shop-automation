@@ -15,13 +15,15 @@ export default defineConfig({
     baseURL: 'https://demowebshop.tricentis.com',
     headless: true,
     screenshot: 'on',
-    video: 'retain-on-failure',
+    // Video requires Playwright's separately downloaded ffmpeg binary. Keep
+    // screenshots and traces while allowing tests to run with installed Edge.
+    video: 'off',
     trace: 'retain-on-failure'
   },
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      name: 'msedge',
+      use: { ...devices['Desktop Edge'], channel: 'msedge' }
     }
   ]
 });

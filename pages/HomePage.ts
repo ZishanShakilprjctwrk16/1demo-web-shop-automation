@@ -17,8 +17,8 @@ export class HomePage {
     this.registerLink = page.getByRole('link', { name: 'Register' });
     this.searchInput = page.locator('#small-searchterms');
     this.searchButton = page.locator('input[value="Search"]');
-    this.cartLink = page.locator('.cart-label');
-    this.accountEmail = page.locator('.account');
+    this.cartLink = page.locator('#topcartlink a');
+    this.accountEmail = page.locator('.header-links a.account');
   }
 
   async goto() {
